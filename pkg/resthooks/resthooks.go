@@ -766,9 +766,20 @@ func (rh *Resthook) DeletePolicyInstance(policyTypeId models.PolicyTypeID, polic
 
 func (rh *Resthook) DataDelivery(httpBody interface{}) error {
 	a1.Logger.Debug("httpbody : %+v", httpBody)
-	mymap := httpBody.(map[string]interface{})
+	mymap, ok := httpBody.(map[string]interface{})
+	if !ok {
+		return errors.New("data delivery body must be a JSON object")
+	}
+	job, ok := mymap["job"].(string)
+	if !ok || job == "" {
+		return errors.New("data delivery job must be a non-empty string")
+	}
+	payload, ok := mymap["payload"].(string)
+	if !ok {
+		return errors.New("data delivery payload must be a string")
+	}
 	message := rmr.Message{}
-	rmrMessage, err := message.A1EIMessage(mymap["job"].(string), mymap["payload"].(string))
+	rmrMessage, err := message.A1EIMessage(job, payload)
 	if err != nil {
 		a1.Logger.Error("error : %v", err)
 		return err

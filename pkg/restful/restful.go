@@ -170,7 +170,7 @@ func (r *Restful) setupHandler() *operations.A1API {
 
 	api.A1eiDataDeliveryA1ControllerDataDeliveryHandler = a1_e_i_data_delivery.A1ControllerDataDeliveryHandlerFunc(func(params a1_e_i_data_delivery.A1ControllerDataDeliveryParams) middleware.Responder {
 		a1.Logger.Debug("handler for EI data delivery")
-		if err = r.rh.DataDelivery(params.Body); err != nil {
+		if err := r.rh.DataDelivery(params.Body); err != nil {
 			return a1_e_i_data_delivery.NewA1ControllerDataDeliveryNotFound()
 		}
 		return a1_e_i_data_delivery.NewA1ControllerDataDeliveryOK()
